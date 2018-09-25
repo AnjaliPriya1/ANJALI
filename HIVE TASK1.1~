@@ -1,0 +1,43 @@
+Create Olympic table
+(
+Athelete String,
+Age int,
+Country Steing
+year int,
+ClosingDate date,
+Sport string,
+GoldMedal int,
+SilverMedal Int,
+BronzeMedal Int,
+TotalMedal int
+)
+row format delimited 
+fields terminated by '	';
+
+Load data Local INPATH '/home/acadgild/Desktop/TestHadoop/olympix_data.csv'
+into table Olympic;
+
+Create Olympic_partitioned table
+(
+Athelete String,
+Age int,
+year int,
+ClosingDate date,
+GoldMedal int,
+SilverMedal Int,
+BronzeMedal Int,
+TotalMedal int
+)
+partitoned by(Country string,sport string)
+row format delimited 
+fields terminated by '	';
+
+set hive.exec.dynamic.partition.mode=nonstrict;
+
+Insert Overwrite into Olympic_partitioned 
+partition(Country,sport)
+select * from Olympic;
+
+Select count(TotalMedal) from Olympic_partitioned GroupBy Country;
+
+
