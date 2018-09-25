@@ -1,0 +1,22 @@
+Create table Olympic_partitioned
+(
+Athelete String,
+Age int,
+ClosingDate date,
+sport string
+GoldMedal int,
+SilverMedal Int,
+BronzeMedal Int,
+TotalMedal int
+)
+partitioned by (year string,country string);
+
+set hive.exec.dynamic.partition.mode=nonstrict;
+
+Insert Overwrite table Olympic_partitioned 
+partition(year,country)
+select Athelete,Age,ClosingDate,sport,GoldMedal,SilverMedal,BronzeMedal,Totalmedal,year,country from Olympic;
+
+Select count(TotalMedal),year from Olympic_partitioned GroupBy year Having Country='India';
+
+
